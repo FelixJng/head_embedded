@@ -4,7 +4,7 @@ from fishVR.core import FishVRConfig
 
 class Estimator:
 
-    def __init__(self, config: FishVRConfig):
+    def __init__(self, config: FishVRConfig = FishVRConfig()):
         self.config = config
 
     def calculate_lighthill_force_torque(self, tail_points_list):
