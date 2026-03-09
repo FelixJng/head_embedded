@@ -1,0 +1,17 @@
+name: fishVR
+channels:
+  - conda-forge
+dependencies:
+  - python >= 3.8
+  - ipython
+  - numpy
+  - numba
+  - pip
+  # - pip:
+  #     - numpy
+  #     - scipy
+  #     - matplotlib
+  #     - seaborn
+  #     - scikit-learn
+  #     - jupyterlab
+  #     - ipywidgets

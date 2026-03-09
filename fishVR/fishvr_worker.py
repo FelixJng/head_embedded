@@ -1,0 +1,54 @@
+"""
+TO BE MOVED TO OTHER REPO
+"""
+from typing import Any, Dict
+from dagline import WorkerNode
+from fishVR.core import FishVR
+import numpy as np
+from numpy.typing import NDArray
+from fishVR import something
+
+class FishVRWorker(WorkerNode):
+
+    def __init__(
+            self,
+            fish_vr: FishVR,
+            cropped: np.ndarray,
+            *args,
+            **kwargs
+        ):
+        super().__init__(*args, **kwargs)
+        self.fish_vr = fish_vr
+        self.cropped = cropped  
+        self.current_estimator = None
+
+    def process(self, data: NDArray) -> Any:
+
+        if data is None:
+            return None
+        
+        estimator = self.fish_vr.estimate(data['image'])
+
+        msg = np.array(
+            (data['index'], data['timestamp'], estimator, data['origin'], data['shape'], data['identity']),
+            dtype=np.dtype([
+                ('index', int),
+                ('timestamp', np.int64),
+                ('tracking', estimator.dtype),
+                ('origin', np.int32, (2,)),
+                ('shape', np.int32, (2,)),
+                ('identity', np.int32),
+            ])
+        )
+
+        res = {}
+        res['estimator'] = msg
+
+        return res
+    
+
+
+        
+
+
+        
