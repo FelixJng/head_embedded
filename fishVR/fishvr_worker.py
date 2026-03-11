@@ -7,29 +7,29 @@ from fishVR.core import FishVR
 import numpy as np
 from numpy.typing import NDArray
 from fishVR.core import FishVRState
-from fishVR.single_fish.single_fish_vr import SingleFishVR_CPU
+from fishVR.single_fish.single_fish_vr import SingleFishVR
 
 class FishVRWorker(WorkerNode):
 
     def __init__(
             self,
-            fish_vr: SingleFishVR_CPU = SingleFishVR_CPU(),
+            fish_vr: SingleFishVR = SingleFishVR(),
             state: FishVRState = FishVRState(),
             *args,
             **kwargs
         ):
         super().__init__(*args, **kwargs)
         self.fish_vr = fish_vr
-        self.state = state
+        state = state
         # self.cropped = cropped  
         self.current_estimator = None
 
-    def process(self, data: NDArray) -> Any:
+    def process_frame(self, data: NDArray) -> Any:
 
         if data is None:
             return None
         
-        estimator = self.fish_vr.estimate(data['image'])
+        estimator = self.fish_vr.process(data['image'], self.state)
 
         msg = np.array(
             (data['index'], data['timestamp'], estimator, data['origin'], data['shape'], data['identity']),
