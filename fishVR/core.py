@@ -47,6 +47,46 @@ class FishVRConfig:
     # color_mode: str = "BGR"  # or "RGB"
 
 
+@dataclass
+class FishVRState:
+    """
+    State of the FishVR system. For passing around chunk data.
+    """
+    def __init__(self, config: FishVRConfig = FishVRConfig()):
+        self.config = config
+    strength: float = 0.0
+    turning_strength: float = 0.0
+    strengths: List = []
+    turning_strengths: List = []
+
+    tail_points: NDArray = field(init=False)
+    tail_points_list: List = []
+
+    ww: int = field(init=False)
+    last_values_1: List = field(init=False)
+    last_values_2: List = field(init=False)
+
+    # todo omega list etc?
+
+
+    def __post_init__(self):
+        self.tail_points = np.full((self.config.n_segments+1, 2), np.nan)
+        self.tail_points[0] = self.config.initial_pos
+        self.ww = int(np.ceil(self.config.window_width*self.config.acquisition_rate))
+        self.last_values_1 = list(np.zeros(self.ww))
+        self.last_values_2 = list(np.zeros(self.ww))
+
+# class FishVRStateHandler:
+#     """Handler for the FishVRState, responsible for updating the state based on new data."""
+#     def __init__(self, state: FishVRState = FishVRState()):
+#         self.state = state
+
+#     def return_tail_tracking(self):
+
+
+#     def update_state(self, new_data: Dict[str, Any]):
+#         # Update the state based on new data
+#         pass
 
 
 class FishVR(ABC):

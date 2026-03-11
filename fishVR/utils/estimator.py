@@ -7,6 +7,9 @@ class Estimator:
     def __init__(self, config: FishVRConfig = FishVRConfig()):
         self.config = config
 
+    def estimate(self):
+        pass
+    
     def calculate_lighthill_force_torque(self, tail_points_list):
         '''
         it calculates metrics proportional to force and torque according to lighthill's model,

@@ -6,20 +6,22 @@ from dagline import WorkerNode
 from fishVR.core import FishVR
 import numpy as np
 from numpy.typing import NDArray
-from fishVR import something
+from fishVR.core import FishVRState
+from fishVR.single_fish.single_fish_vr import SingleFishVR_CPU
 
 class FishVRWorker(WorkerNode):
 
     def __init__(
             self,
-            fish_vr: FishVR,
-            cropped: np.ndarray,
+            fish_vr: SingleFishVR_CPU = SingleFishVR_CPU(),
+            state: FishVRState = FishVRState(),
             *args,
             **kwargs
         ):
         super().__init__(*args, **kwargs)
         self.fish_vr = fish_vr
-        self.cropped = cropped  
+        self.state = state
+        # self.cropped = cropped  
         self.current_estimator = None
 
     def process(self, data: NDArray) -> Any:

@@ -9,6 +9,12 @@ class TailTracker:
     def __init__(self, config: FishVRConfig = FishVRConfig()):
         self.config = config 
 
+    def track_tail(self, frame, tail_points):
+        mask = self.get_tail_mask(frame)  # get mask of tail for tracking
+        tail_points = self.segment_tail(mask, tail_points)
+        tail_points_transformed = self.transform_tail_points(tail_points)
+        return tail_points_transformed
+
 
     def get_tail_mask(self, cropped: np.ndarray) -> np.ndarray:
 
