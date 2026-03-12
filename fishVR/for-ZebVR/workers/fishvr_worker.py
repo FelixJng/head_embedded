@@ -3,9 +3,11 @@ TO BE MOVED TO OTHER REPO
 """
 from typing import Any, Dict
 from dagline import WorkerNode
-from fishVR.core import FishVR
 import numpy as np
 from numpy.typing import NDArray
+
+ENABLE_KALMAN = False
+
 from fishVR.core import FishVRState
 from fishVR.single_fish.single_fish_vr import SingleFishVR
 
@@ -24,7 +26,7 @@ class FishVRWorker(WorkerNode):
         # self.cropped = cropped  
         self.current_estimator = None
 
-    def process_frame(self, data: NDArray) -> Any:
+    def process_data(self, data: NDArray) -> Dict:
 
         if data is None:
             return None
@@ -47,6 +49,10 @@ class FishVRWorker(WorkerNode):
         res['estimator'] = msg
         # todo change visual according to estimator 
         return res
+    
+
+    def process_meta_data(self, meta_data) -> Any:
+        pass
     
 
 

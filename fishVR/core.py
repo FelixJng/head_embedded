@@ -37,6 +37,9 @@ class FishVRConfig:
     alpha: float = 0.2
     beta: float = 175.0
     cm_per_pix: float = 1/404.7
+
+    # VR WORLD params
+    # todo enter params, like size etc for VR world 
     
     def __post_init__(self):
         self.dt = 1 / self.acquisition_rate
