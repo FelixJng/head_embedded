@@ -2,7 +2,7 @@ from typing import List
 from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
-from fishVR.core import FishVR, FishVRConfig
+from fishVR.core import FishVR, FishVRConfig, FishVRState
 from fishVR.utils.tail_tracker import TailTracker
 from fishVR.utils.estimator import Estimator
 
@@ -23,19 +23,9 @@ class SingleFishVR(FishVR):
         self.tail_tracker = tail_tracker
         self.estimator = estimator
 
-    def process(self, frame, state):
-        
-        tail_points_list = self.state_handler.state.tail_points_list
-        tail_points = self.state_handler.state.tail_points
+    def process(self, frame: NDArray, state: FishVRState) -> tuple:
 
-        # if not first_frame:
-        #     pass
+        state = self.tail_tracker.track_tail(frame, state)  # track tail and update state                                               
+        res, state = self.estimator.estimate(state)  # estimate strength and turning strength and update state
 
-        # todo: i > 1!!!
-        tail_points_transformed = self.tail_tracker.track_tail(frame, tail_points)  # track tail and update state
-        tail_points_list.append(np.array(tail_points_transformed))
-
-        
-        force_lighthill,torque_lighthill=calculate_lighthill_force_torque(tail_points_list, vr_dict['acquisition_rate']) 
-
-        return res
+        return res, state

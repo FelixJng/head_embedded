@@ -20,7 +20,7 @@ class FishVRWorker(WorkerNode):
         ):
         super().__init__(*args, **kwargs)
         self.fish_vr = fish_vr
-        state = state
+        self.state = state
         # self.cropped = cropped  
         self.current_estimator = None
 
@@ -29,7 +29,7 @@ class FishVRWorker(WorkerNode):
         if data is None:
             return None
         
-        estimator = self.fish_vr.process(data['image'], self.state)
+        estimator, self.state = self.fish_vr.process(data['image'], self.state)
 
         msg = np.array(
             (data['index'], data['timestamp'], estimator, data['origin'], data['shape'], data['identity']),
@@ -45,7 +45,7 @@ class FishVRWorker(WorkerNode):
 
         res = {}
         res['estimator'] = msg
-
+        # todo change visual according to estimator 
         return res
     
 

@@ -7,8 +7,42 @@ class Estimator:
     def __init__(self, config: FishVRConfig = FishVRConfig()):
         self.config = config
 
-    def estimate(self):
-        pass
+    def estimate(self, state):
+        force_lighthill,torque_lighthill=self.calculate_lighthill_force_torque(state.tail_points_list) 
+        state.tail_points_list.pop(0) # keep only the last two tail points in the list for the next iteration
+        state.last_values_1.pop(0)
+        state.last_values_1.append(force_lighthill[1])
+        force_lighthill_avg=np.nanmean(state.last_values_1)                    
+        state.last_values_2.pop(0)
+        state.last_values_2.append(torque_lighthill)                                        
+        torque_lighthill_avg=np.nanmean(state.last_values_2)
+        strength_now=self.raise_to_power(force_lighthill_avg, 2/3)
+        turning_strength_now=torque_lighthill_avg
+        state.strength=self.lowpass_filter(strength_now,state.strength)  # swimmig speed
+        state.turning_strength=self.lowpass_filter(turning_strength_now,state.turning_strength)  # angular velocity
+
+        # turning_strengths.append(turning_strength)
+        # strengths.append(strength)
+        # if np.abs(state.strength)<self.config.threshold_strength_now: # threshold the strength
+        #     strength_increment=0
+        #     turning_strength_increment=0
+        # else:
+        strength_increment=state.strength
+        turning_strength_increment=state.turning_strength
+
+        v_feedback_now = self.config.alpha*strength_increment*(self.config.refresh_rate/self.config.acquisition_rate)
+        omega_feedback_now = self.config.parity_projector*self.config.beta*turning_strength_increment*(self.config.refresh_rate/self.config.acquisition_rate)
+        
+        # convert back to pixels?
+        v_feedback_now_pix = v_feedback_now / self.config.cm_per_pix
+        omega_feedback_rad = omega_feedback_now * np.pi / 180
+        state.theta -= omega_feedback_rad * self.config.dt
+        dx = v_feedback_now_pix * np.sin(state.theta) * self.config.dt  # inverted sin/cos as y axis is inverted in the image
+        dy = v_feedback_now_pix * np.cos(state.theta) * self.config.dt
+
+        res = dx, dy, state.theta
+        
+        return res, state
     
     def calculate_lighthill_force_torque(self, tail_points_list):
         '''

@@ -60,6 +60,7 @@ class FishVRState:
     turning_strengths: List = []
 
     tail_points: NDArray = field(init=False)
+    tail_points_transformed: NDArray = field(init=False)
     tail_points_list: List = []
 
     ww: int = field(init=False)
@@ -68,9 +69,12 @@ class FishVRState:
 
     # todo omega list etc?
 
+    # todo: initialize theta?
+    theta: float = 0.0
 
     def __post_init__(self):
         self.tail_points = np.full((self.config.n_segments+1, 2), np.nan)
+        self.tail_points_transformed = np.full((self.config.n_segments+1, 2), np.nan)
         self.tail_points[0] = self.config.initial_pos
         self.ww = int(np.ceil(self.config.window_width*self.config.acquisition_rate))
         self.last_values_1 = list(np.zeros(self.ww))
@@ -95,6 +99,6 @@ class FishVR(ABC):
     # def __init__(self, config: FishVRConfig):
     #     self.config = config
     @abstractmethod
-    def process(self, frame: NDArray) -> Dict[str, Any]:
+    def process(self, frame: NDArray, state: FishVRState) -> tuple:
         """Process a single frame and return relevant data."""
         pass
