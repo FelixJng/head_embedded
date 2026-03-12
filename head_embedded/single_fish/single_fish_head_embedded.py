@@ -13,22 +13,13 @@ class SingleFishHeadEmbeddedConfig(HeadEmbeddedConfig):
     def dtype(self) -> np.dtype:
         dt = np.dtype([
             ('success', np.bool_),
-            ('body_axes', np.float32, (2,2)),
             ('body_axes_global', np.float32, (2,2)),
-            ('centroid_resized', np.float32, (2,)),
-            ('centroid_cropped', np.float32, (2,)),
-            ('centroid_input', np.float32, (2,)),
             ('centroid_global', np.float32, (2,)),
-            ('angle_rad', np.float32),
-            ('angle_rad_global', np.float32),
-            # ('mask', np.bool_, self.resized_dimension_px[::-1]),
-            # ('image_processed', np.float32, self.resized_dimension_px[::-1]),
-            # ('image_cropped', self.input_image_dtype, self.crop_dimension_px[::-1]),
-            # ('background_image_cropped', self.input_image_dtype, self.crop_dimension_px[::-1]), 
-            # ('pix_per_mm_global', np.float32),
-            # ('pix_per_mm_input', np.float32),
-            # ('pix_per_mm_cropped', np.float32),
-            # ('pix_per_mm_resized', np.float32),
+            ('est_theta', np.float32, (1,)),
+            ('strength', np.float32, (1,)),
+            ('turning_strength', np.float32, (1,)),
+            ('v_feedback_pix', np.float32, (1,)),
+            ('omega_feedback_rad', np.float32, (1,)),
         ])
         return dt
 
@@ -36,7 +27,21 @@ class SingleFishHeadEmbeddedConfig(HeadEmbeddedConfig):
     def failed(self):
         return np.zeros((), dtype=self.dtype)
 
+@dataclass
+class DummyClass:
+    
+    @property
+    def dtype(self) -> np.dtype:
+        dt = np.dtype([
+            ('success', np.bool_),
+            ('body', NDArray),
+        ])
+        return dt
 
+    @property
+    def failed(self):
+        return np.zeros((), dtype=self.dtype)
+    
   
 class SingleFishHeadEmbedded(HeadEmbedded):
 
@@ -54,35 +59,34 @@ class SingleFishHeadEmbedded(HeadEmbedded):
     def process(self, frame: NDArray, state: HeadEmbeddedState) -> tuple:
 
         state = self.tail_tracker.track_tail(frame, state)  # track tail and update state                                               
-        res, state = self.estimator.estimate(state)  # estimate strength and turning strength and update state
+        state = self.estimator.estimate(state)  # estimate strength and turning strength and update state
+        res = self.build_res(state)  # build result array from state
+        estimator = np.array(
+            (
+                True, 
+                res,
+            ), dtype=DummyClass().dtype
+        )
 
-        return res, state
+        return estimator, state
     
-    def build_res(self):
+    def build_res(self, state):
+
         res = np.array(
             (
                 True,
-                tracking.body_axes, 
-                tracking.body_axes_global,
-                tracking.centroid_resized,
-                tracking.centroid_cropped,
-                tracking.centroid_input,
-                tracking.centroid_global,
-                tracking.angle_rad,
-                tracking.angle_rad_global,
-                mask, 
-                preproc.image_processed,
-                preproc.image_cropped,
-                preproc.background_image_cropped,
-                resolution.pix_per_mm_global,
-                resolution.pix_per_mm_input,
-                resolution.pix_per_mm_cropped,
-                resolution.pix_per_mm_resized,
+                # TODO: check this, currently 90 is top, 0 is right
+                np.array([
+                    [np.cos(state.theta), np.sin(state.theta)],
+                    [np.sin(state.theta), -np.cos(state.theta)]
+                ]), 
+                np.array([state.x, state.y]),
+                np.array([state.theta]),
+                np.array([state.strength]),
+                np.array([state.turning_strength]),
+                np.array([state.v_feedback_pix]),
+                np.array([state.omega_feedback_rad]),
             ), 
             dtype=self.config.dtype
         )
         return res
-    
-    'centroid_global' - estimated x,y position
-    'caudorostral_axis' - theta
-    # mediolater, axis perpendicular to caudorostral axis
