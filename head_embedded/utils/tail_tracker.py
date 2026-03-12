@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from numba import njit
-from fishVR.core import HeadEmbeddedConfig
+from head_embedded.core import HeadEmbeddedConfig
 
 
 class TailTracker:

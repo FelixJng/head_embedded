@@ -1,5 +1,5 @@
 import numpy as np
-from fishVR.core import HeadEmbeddedConfig
+from head_embedded.core import HeadEmbeddedConfig
 
 
 class Estimator:

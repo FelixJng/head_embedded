@@ -2,12 +2,12 @@ from typing import List
 from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
-from fishVR.core import FishVR, HeadEmbeddConfig, FishVRState
-from fishVR.utils.tail_tracker import TailTracker
-from fishVR.utils.estimator import Estimator
+from head_embedded.core import HeadEmbeddedConfig, HeadEmbeddedState, HeadEmbedded
+from head_embedded.utils.tail_tracker import TailTracker
+from head_embedded.utils.estimator import Estimator
 
 @dataclass
-class SingleFishVRConfig(HeadEmbeddConfig):
+class SingleFishHeadEmbeddedConfig(HeadEmbeddedConfig):
     
     @property
     def dtype(self) -> np.dtype:
@@ -38,11 +38,11 @@ class SingleFishVRConfig(HeadEmbeddConfig):
 
 
   
-class SingleFishVR(FishVR):
+class SingleFishHeadEmbedded(HeadEmbedded):
 
     def __init__(
             self, 
-            config: SingleFishVRConfig = SingleFishVRConfig(),
+            config: SingleFishHeadEmbeddedConfig = SingleFishHeadEmbeddedConfig(),
             tail_tracker: TailTracker = TailTracker(),
             estimator: Estimator = Estimator(),
         ):
@@ -51,7 +51,7 @@ class SingleFishVR(FishVR):
         self.tail_tracker = tail_tracker
         self.estimator = estimator
 
-    def process(self, frame: NDArray, state: FishVRState) -> tuple:
+    def process(self, frame: NDArray, state: HeadEmbeddedState) -> tuple:
 
         state = self.tail_tracker.track_tail(frame, state)  # track tail and update state                                               
         res, state = self.estimator.estimate(state)  # estimate strength and turning strength and update state
