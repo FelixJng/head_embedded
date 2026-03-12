@@ -1,10 +1,10 @@
 import numpy as np
-from fishVR.core import FishVRConfig
+from fishVR.core import HeadEmbeddedConfig
 
 
 class Estimator:
 
-    def __init__(self, config: FishVRConfig = FishVRConfig()):
+    def __init__(self, config: HeadEmbeddedConfig = HeadEmbeddedConfig()):
         self.config = config
 
     def estimate(self, state):

@@ -8,8 +8,8 @@ from numba import njit
 
 
 @dataclass
-class FishVRConfig:
-    """Configuration for the FishVR system."""
+class HeadEmbeddedConfig:
+    """Configuration for the head-embedded VR system."""
 
     # General settings - camera
     acquisition_rate: int = 120
@@ -52,11 +52,11 @@ class FishVRConfig:
 
 
 @dataclass
-class FishVRState:
+class HeadEmbeddedState:
     """
     State of the FishVR system. For passing around chunk data.
     """
-    def __init__(self, config: FishVRConfig = FishVRConfig()):
+    def __init__(self, config: HeadEmbeddedConfig = HeadEmbeddedConfig()):
         self.config = config
     strength: float = 0.0
     turning_strength: float = 0.0
@@ -99,12 +99,12 @@ class FishVRState:
 #         pass
 
 
-class FishVR(ABC):
-    """Abstract base class for the FishVR system."""
+class HeadEmbedded(ABC):
+    """Abstract base class for the head-embedded VR system."""
 
-    # def __init__(self, config: FishVRConfig):
+    # def __init__(self, config: HeadEmbeddedConfig):
     #     self.config = config
     @abstractmethod
-    def process(self, frame: NDArray, state: FishVRState) -> tuple:
+    def process(self, frame: NDArray, state: HeadEmbeddedState) -> tuple:
         """Process a single frame and return relevant data."""
         pass

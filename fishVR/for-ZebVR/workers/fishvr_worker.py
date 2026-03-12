@@ -9,7 +9,7 @@ from numpy.typing import NDArray
 ENABLE_KALMAN = False
 
 from fishVR.core import FishVRState
-from fishVR.single_fish.single_fish_vr import SingleFishVR
+from fishVR.single_fish.single_fish_head_embedded import SingleFishVR
 
 class FishVRWorker(WorkerNode):
 

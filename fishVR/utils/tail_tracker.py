@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
 from numba import njit
-from fishVR.core import FishVRConfig
+from fishVR.core import HeadEmbeddedConfig
 
 
 class TailTracker:
 
-    def __init__(self, config: FishVRConfig = FishVRConfig()):
+    def __init__(self, config: HeadEmbeddedConfig = HeadEmbeddedConfig()):
         self.config = config 
 
     def track_tail(self, frame, state):
