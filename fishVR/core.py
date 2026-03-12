@@ -39,7 +39,8 @@ class FishVRConfig:
     cm_per_pix: float = 1/404.7
 
     # VR WORLD params
-    # todo enter params, like size etc for VR world 
+    x_dim_vr: float = 1000.0  # x size of VR world in pix
+    y_dim_vr: float = 1000.0  # y size of VR world in pix
     
     def __post_init__(self):
         self.dt = 1 / self.acquisition_rate
@@ -73,6 +74,8 @@ class FishVRState:
     # todo omega list etc?
 
     # todo: initialize theta?
+    x : float = 500.0
+    y : float = 500.0
     theta: float = 0.0
 
     def __post_init__(self):

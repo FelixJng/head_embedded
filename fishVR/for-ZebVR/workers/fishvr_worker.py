@@ -31,7 +31,7 @@ class FishVRWorker(WorkerNode):
         if data is None:
             return None
         
-        estimator, self.state = self.fish_vr.process(data['image'], self.state)
+        self.state = self.fish_vr.process(data['image'], self.state)
 
         msg = np.array(
             (data['index'], data['timestamp'], estimator, data['origin'], data['shape'], data['identity']),
@@ -53,7 +53,7 @@ class FishVRWorker(WorkerNode):
 
     def process_meta_data(self, meta_data) -> Any:
         pass
-    
+
 
 
         

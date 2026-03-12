@@ -39,10 +39,19 @@ class Estimator:
         state.theta -= omega_feedback_rad * self.config.dt
         dx = v_feedback_now_pix * np.sin(state.theta) * self.config.dt  # inverted sin/cos as y axis is inverted in the image
         dy = v_feedback_now_pix * np.cos(state.theta) * self.config.dt
-
-        res = dx, dy, state.theta
         
-        return res, state
+        state.x += dx
+        if state.x > self.config.x_dim_vr:
+            state.x = self.config.x_dim_vr
+        elif state.x < 0:
+            state.x = 0.0
+        state.y += dy
+        if state.y > self.config.y_dim_vr:
+            state.y = self.config.y_dim_vr
+        elif state.y < 0:
+            state.y = 0.0
+        
+        return state
     
     def calculate_lighthill_force_torque(self, tail_points_list):
         '''

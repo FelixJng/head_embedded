@@ -10,7 +10,7 @@ class TailTracker:
         self.config = config 
 
     def track_tail(self, frame, state):
-        
+
         mask = self.get_tail_mask(frame)  # get mask of tail for tracking
         state.tail_points = self.segment_tail(mask, state.tail_points)
         state.tail_points_transformed = self.transform_tail_points(state.tail_points)
