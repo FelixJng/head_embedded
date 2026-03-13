@@ -20,6 +20,7 @@ class SingleFishHeadEmbeddedConfig(HeadEmbeddedConfig):
             ('turning_strength', np.float32, (1,)),
             ('v_feedback_pix', np.float32, (1,)),
             ('omega_feedback_rad', np.float32, (1,)),
+            ('tail_points_transformed', np.float32, (self.n_segments+1, 2)),
         ])
         return dt
 
@@ -86,6 +87,7 @@ class SingleFishHeadEmbedded(HeadEmbedded):
                 np.array([state.turning_strength]),
                 np.array([state.v_feedback_pix]),
                 np.array([state.omega_feedback_rad]),
+                np.array(state.tail_points_transformed),
             ), 
             dtype=self.config.dtype
         )
