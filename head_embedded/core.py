@@ -24,7 +24,7 @@ class HeadEmbeddedConfig:
     tail_length_pix: int = 120
     # R: NDArray = np.array([[1, 0], [0,  1],])
     R: NDArray = field(default_factory=lambda: np.array([[1, 0], [0,  1],]))
-    initial_pos: NDArray = np.array([960, 540])
+    initial_pos: NDArray = field(default_factory=lambda: np.array([960, 540]))
     window_radius: int = 6
     initial_delta: NDArray = field(init=False)
     segment_length: int = field(init=False)
