@@ -1,4 +1,4 @@
-name: fishVR
+name: head_embedded
 channels:
   - conda-forge
 dependencies:
