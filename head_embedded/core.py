@@ -61,12 +61,12 @@ class HeadEmbeddedState:
         self.config = config
     strength: float = 0.0
     turning_strength: float = 0.0
-    strengths: List = []
-    turning_strengths: List = []
+    strengths: List = field(default_factory=list)
+    turning_strengths: List = field(default_factory=list)
 
     tail_points: NDArray = field(init=False)
     tail_points_transformed: NDArray = field(init=False)
-    tail_points_list: List = []
+    tail_points_list: List = field(default_factory=list)
 
     ww: int = field(init=False)
     last_values_1: List = field(init=False)
