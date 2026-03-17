@@ -15,7 +15,7 @@ setup(
         "opencv-python-headless",
         "PyQt5",
         "numba",
-        "opencv-python"
+        "opencv-python",
         "kalman @ git+https://github.com/ElTinmar/Kalman.git@main"
     ]
 )
