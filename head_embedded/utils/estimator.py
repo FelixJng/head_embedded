@@ -34,11 +34,11 @@ class Estimator:
         omega_feedback_now = self.config.parity_projector*self.config.beta*turning_strength_increment*(self.config.refresh_rate/self.config.acquisition_rate)
         
         # convert back to pixels?
-        v_feedback_now_pix = v_feedback_now / self.config.cm_per_pix
-        omega_feedback_rad = omega_feedback_now * np.pi / 180
-        state.theta -= omega_feedback_rad * self.config.dt
-        dx = v_feedback_now_pix * np.sin(state.theta) * self.config.dt  # inverted sin/cos as y axis is inverted in the image
-        dy = v_feedback_now_pix * np.cos(state.theta) * self.config.dt
+        state.v_feedback_now_pix = v_feedback_now / self.config.cm_per_pix
+        state.omega_feedback_rad = omega_feedback_now * np.pi / 180
+        state.theta -= state.omega_feedback_rad * self.config.dt
+        dx = state.v_feedback_now_pix * np.sin(state.theta) * self.config.dt  # inverted sin/cos as y axis is inverted in the image
+        dy = state.v_feedback_now_pix * np.cos(state.theta) * self.config.dt
         
         state.x += dx
         if state.x > self.config.x_dim_vr:

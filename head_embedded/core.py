@@ -79,6 +79,8 @@ class HeadEmbeddedState:
     x : float = 500.0
     y : float = 500.0
     theta: float = 0.0
+    v_feedback_pix : float = 0.0
+    omega_feedback_rad : float = 0.0
 
     def __post_init__(self):
         self.tail_points = np.full((self.config.n_segments+1, 2), np.nan)
