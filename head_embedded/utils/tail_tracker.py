@@ -27,8 +27,6 @@ class TailTracker:
         # cropped = crop_along_direction(frame, (centroid_x, centroid_y), angle, crop_w=200, crop_h=400)
         if cropped is None:
             pass
-        print(40 * '-' + 'CROPPED IMAGE type' + 40 * '-')
-        print(type(cropped))
         if len(cropped.shape) == 3:
             cropped_gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY).astype('uint8')  # convert to grayscale
         else:

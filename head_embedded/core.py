@@ -57,8 +57,9 @@ class HeadEmbeddedState:
     """
     State of the FishVR system. For passing around chunk data.
     """
-    def __init__(self, config: HeadEmbeddedConfig = HeadEmbeddedConfig()):
-        self.config = config
+    # def __init__(self, config: HeadEmbeddedConfig = HeadEmbeddedConfig()):
+    #     self.config = config
+    config: HeadEmbeddedConfig = field(default_factory=HeadEmbeddedConfig)
     strength: float = 0.0
     turning_strength: float = 0.0
     strengths: List = field(default_factory=list)
