@@ -73,22 +73,37 @@ class SingleFishHeadEmbedded(HeadEmbedded):
     
     def build_res(self, state):
 
-        res = np.array(
-            (
-                True,
-                # TODO: check this, currently 90 is top, 0 is right
-                np.array([
-                    [np.cos(state.theta), np.sin(state.theta)],
-                    [np.sin(state.theta), -np.cos(state.theta)]
-                ]), 
-                np.array([state.x, state.y]),
-                np.array([state.theta]),
-                np.array([state.strength]),
-                np.array([state.turning_strength]),
-                np.array([state.v_feedback_pix]),
-                np.array([state.omega_feedback_rad]),
-                np.array(state.tail_points_transformed),
-            ), 
-            dtype=self.config.dtype
-        )
+        res = np.zeros((), dtype=self.config.dtype)  # create a scalar structured array
+
+        res['success'] = True
+        res['body_axes_global'] = np.array([[np.cos(state.theta), np.sin(state.theta)],
+                                        [np.sin(state.theta), -np.cos(state.theta)]], dtype=np.float32)
+        res['centroid_global'] = np.array([state.x, state.y], dtype=np.float32)
+        res['est_theta'] = np.array([state.theta], dtype=np.float32)
+        res['strength'] = np.array([state.strength], dtype=np.float32)
+        res['turning_strength'] = np.array([state.turning_strength], dtype=np.float32)
+        res['v_feedback_pix'] = np.array([state.v_feedback_pix], dtype=np.float32)
+        res['omega_feedback_rad'] = np.array([state.omega_feedback_rad], dtype=np.float32)
+        res['tail_points_transformed'] = np.array(state.tail_points_transformed, dtype=np.float32)
+
         return res
+        # res = np.array(
+        #     (
+        #         True,
+        #         # TODO: check this, currently 90 is top, 0 is right
+        #         np.array([
+        #             [np.cos(state.theta), np.sin(state.theta)],
+        #             [np.sin(state.theta), -np.cos(state.theta)]
+        #         ]), 
+        #         np.array([state.x, state.y]),
+        #         np.array([state.theta]),
+        #         np.array([state.strength]),
+        #         np.array([state.turning_strength]),
+        #         np.array([state.v_feedback_pix]),
+        #         np.array([state.omega_feedback_rad]),
+        #         np.array(state.tail_points_transformed),
+        #     ), 
+        #     dtype=self.config.dtype
+        # )
+        # return res
+    
