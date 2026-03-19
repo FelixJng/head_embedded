@@ -43,9 +43,9 @@ class TailTracker:
 
         return mask
 
-
+    @staticmethod
     @njit
-    def next_segment(self, im, x0, y0, dx, dy, r, segment_length):
+    def next_segment(im, x0, y0, dx, dy, r, segment_length, threshold=0.7):
         '''
         function to segment the tail, it gives the next point by calculating the center of mass in a circular window
         of radius r around (x0+dx,y0+dy) and taking the point at a distance |dx,dy| form (x0,y0) that is closest to that center of mass,
@@ -81,7 +81,7 @@ class TailTracker:
             return np.nan,np.nan,np.nan,np.nan
         dx_new=dx_new/norm*segment_length
         dy_new=dy_new/norm*segment_length
-        if (dx*dx_new+dy*dy_new)/segment_length**2<self.config.scalar_product_threshold:
+        if (dx*dx_new+dy*dy_new)/segment_length**2<threshold:
             return np.nan,np.nan,np.nan,np.nan
         return x0+dx_new,y0+dy_new,dx_new,dy_new
 
@@ -97,7 +97,7 @@ class TailTracker:
         dx,dy=self.config.initial_delta
 
         for s in range(1,self.config.n_segments+1):
-            start_x,start_y,dx,dy=self.next_segment(frame_p,start_x,start_y,dx,dy,self.config.window_radius,self.config.segment_length)
+            start_x,start_y,dx,dy=self.next_segment(frame_p,start_x,start_y,dx,dy,self.config.window_radius,self.config.segment_length, threshold=self.config.scalar_product_threshold)
             if np.isnan(start_x):
                 # print(f'Error at segment {s}')
                 tail_points[s:]=np.nan
