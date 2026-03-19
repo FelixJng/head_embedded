@@ -35,7 +35,7 @@ class DummyClass:
     def dtype(self) -> np.dtype:
         dt = np.dtype([
             ('success', np.bool_),
-            ('body', NDArray),
+            ('body', SingleFishHeadEmbeddedConfig().dtype),
         ])
         return dt
 
