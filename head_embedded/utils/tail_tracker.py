@@ -25,7 +25,12 @@ class TailTracker:
         n_interations = self.config.n_interations
 
         # cropped = crop_along_direction(frame, (centroid_x, centroid_y), angle, crop_w=200, crop_h=400)
-        cropped_gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)  # convert to grayscale
+        if cropped is None:
+            pass
+        if len(cropped.shape) == 3:
+            cropped_gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)  # convert to grayscale
+        else:
+            cropped_gray = cropped  # already grayscale
         # cropped_gray = cv2.GaussianBlur(cropped_gray, (3,3), 0) 
         cropped_gray = 255 - cropped_gray  # invert grayscale so that tail is bright on dark background
 
