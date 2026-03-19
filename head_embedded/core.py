@@ -84,6 +84,7 @@ class HeadEmbeddedState:
         self.tail_points = np.full((self.config.n_segments+1, 2), np.nan)
         self.tail_points_transformed = np.full((self.config.n_segments+1, 2), np.nan)
         self.tail_points[0] = self.config.initial_pos
+        self.tail_points_list=[np.array(self.tail_points_transformed),np.array(self.tail_points_transformed)]
         self.ww = int(np.ceil(self.config.window_width*self.config.acquisition_rate))
         self.last_values_1 = list(np.zeros(self.ww))
         self.last_values_2 = list(np.zeros(self.ww))
